@@ -1,9 +1,29 @@
-import { _decorator, Camera, CCInteger, Color, Component, ERaycast2DType, ERigidBody2DType, EventTouch, Graphics, Input, input, Node, PhysicsSystem2D, PolygonCollider2D, RigidBody2D, SystemEvent, systemEvent, UITransform, Vec2, Vec3 } from 'cc';
+import {
+    _decorator,
+    Camera,
+    CCInteger,
+    Color,
+    Component,
+    ERaycast2DType,
+    ERigidBody2DType,
+    EventTouch,
+    Graphics,
+    Input,
+    input,
+    Node,
+    PhysicsSystem2D,
+    PolygonCollider2D,
+    RigidBody2D,
+    SystemEvent,
+    systemEvent,
+    UITransform,
+    Vec2,
+    Vec3,
+} from "cc";
 const { ccclass, property } = _decorator;
 
-@ccclass('DrawControl')
+@ccclass("DrawControl")
 export class DrawControl extends Component {
-
     @property(UITransform)
     canvas: UITransform;
 
@@ -14,7 +34,7 @@ export class DrawControl extends Component {
     line: Graphics = null;
 
     @property(RigidBody2D)
-    obstacle: RigidBody2D = null;
+    listRigibody: RigidBody2D[] = [];
 
     startPoint: Vec2 = new Vec2(0, 0);
     endPoint: Vec2 = new Vec2(100, 100);
@@ -42,12 +62,14 @@ export class DrawControl extends Component {
     onTouchEnd(event: EventTouch) {
         // this.obstacle.active = true;
         this.endDraw = true;
-        this.obstacle.type = ERigidBody2DType.Dynamic;
-        this.lineRigibody.type = ERigidBody2DType.Dynamic;
+        this.turnDynamicType();
     }
 
     drawLine(start: Vec2, end: Vec2) {
-        if (!this.checkCanDraw()) { console.log("Can't draw"); return; }
+        if (!this.checkCanDraw()) {
+            console.log("Can't draw");
+            return;
+        }
         // console.log(this.startPoint + " " + this.endPoint);
         // this.line.clear(); // Clear any previous drawings
 
@@ -55,20 +77,19 @@ export class DrawControl extends Component {
         this.line.lineTo(end.x, end.y); // Draw line to end point
         this.line.stroke(); // Apply the stroke to draw the line
 
-        this.createPolygon(this.startPoint, this.endPoint)
+        this.createPolygon(this.startPoint, this.endPoint);
         this.startPoint = this.endPoint;
     }
     checkCanDraw(): boolean {
         if (this.endDraw) return false;
         if (!this.line) {
-            console.error('line component is not assigned.');
+            console.error("line component is not assigned.");
             return false;
         }
         if (this.checkRaycast()) {
             console.log("Have obstacle");
             return false;
-        }
-        else{
+        } else {
             console.log("Bug");
         }
         // if(Vec2.strictEquals(this.startPoint, this.endPoint)) return false;
@@ -77,8 +98,12 @@ export class DrawControl extends Component {
     }
     checkRaycast(): boolean {
         let isCollision = false;
-        const results = PhysicsSystem2D.instance.raycast(this.startPoint, this.endPoint, ERaycast2DType.All);
-        results.forEach(result => {
+        const results = PhysicsSystem2D.instance.raycast(
+            this.startPoint,
+            this.endPoint,
+            ERaycast2DType.All
+        );
+        results.forEach((result) => {
             const collider = result.collider;
             if (collider.node.layer == this.node.layer) {
                 console.log(collider.node.name);
@@ -86,27 +111,42 @@ export class DrawControl extends Component {
             }
             // console.log(`Hit collider on layer: ${collider.node.layer}`);
         });
-        if(isCollision) return true;
+        if (isCollision) return true;
         return false;
     }
 
-    private createPolygon(startPoint: Vec2, endPoint: Vec2,): void {
-        const vec = new Vec2(endPoint.x - startPoint.x, endPoint.y - startPoint.y).normalize()
-        vec.rotate(Math.PI / 2)
+    private createPolygon(startPoint: Vec2, endPoint: Vec2): void {
+        const vec = new Vec2(
+            endPoint.x - startPoint.x,
+            endPoint.y - startPoint.y
+        ).normalize();
+        vec.rotate(Math.PI / 2);
 
-        const offset = 2.5
+        const offset = 2.5;
 
-        const listPoint = [new Vec2(startPoint.x - vec.x * offset, startPoint.y - vec.y * offset),
-        new Vec2(endPoint.x - vec.x * offset, endPoint.y - vec.y * offset),
-        new Vec2(endPoint.x + vec.x * offset, endPoint.y + vec.y * offset),
-        new Vec2(startPoint.x + vec.x * offset, startPoint.y + vec.y * offset)]
+        const listPoint = [
+            new Vec2(
+                startPoint.x - vec.x * offset,
+                startPoint.y - vec.y * offset
+            ),
+            new Vec2(endPoint.x - vec.x * offset, endPoint.y - vec.y * offset),
+            new Vec2(endPoint.x + vec.x * offset, endPoint.y + vec.y * offset),
+            new Vec2(
+                startPoint.x + vec.x * offset,
+                startPoint.y + vec.y * offset
+            ),
+        ];
 
-        const collider = this.line.node.addComponent(PolygonCollider2D)
-        collider.group = 2
-        collider.points = listPoint
+        const collider = this.line.node.addComponent(PolygonCollider2D);
+        collider.group = 2;
+        collider.points = listPoint;
         collider.density = 100;
-        collider.apply()
+        collider.apply();
+    }
+
+    turnDynamicType() {
+        for (let i = 0; i < this.listRigibody.length; i++) {
+            this.listRigibody[i].type = ERigidBody2DType.Dynamic;
+        }
     }
 }
-
-

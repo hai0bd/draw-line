@@ -1,9 +1,19 @@
-import { _decorator, Collider, Collider2D, Component, Contact2DType, instantiate, IPhysics2DContact, Node, Prefab } from 'cc';
-import { CollisionTag, MapControl } from './MapControl';
-import { UIManager } from './UIManager';
+import {
+    _decorator,
+    Collider,
+    Collider2D,
+    Component,
+    Contact2DType,
+    instantiate,
+    IPhysics2DContact,
+    Node,
+    Prefab,
+} from "cc";
+import { CollisionTag, MapControl } from "./MapControl";
+import { UIManager } from "./UIManager";
 const { ccclass, property } = _decorator;
 
-@ccclass('GameManager')
+@ccclass("GameManager")
 export class GameManager extends Component {
     @property(Prefab)
     level: Prefab[] = [];
