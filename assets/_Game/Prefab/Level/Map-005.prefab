@@ -72,7 +72,7 @@
       "z": 1
     },
     "_mobility": 0,
-    "_layer": 1073741824,
+    "_layer": 2,
     "_euler": {
       "__type__": "cc.Vec3",
       "x": 0,
@@ -90,7 +90,7 @@
       "__id__": 1
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 3
@@ -219,7 +219,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Circle",
+    "_name": "Ball",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -318,13 +318,13 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 35,
-      "g": 145,
-      "b": 218,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "c7dcc854-117a-437f-9635-84a9edbf473d@f9941",
+      "__uuid__": "b4fbd67f-bba1-49b7-9b21-b0ff9b24e586@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -456,7 +456,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 238.673,
-      "y": -298.05,
+      "y": -233.12,
       "z": 0
     },
     "_lrot": {
@@ -527,13 +527,13 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 194,
+      "r": 255,
+      "g": 255,
       "b": 255,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "139d3bed-a4aa-42f1-90b7-a7c012ebcc0e@f9941",
+      "__uuid__": "0ed121ef-1e57-45ae-afcf-a3e447e14fb7@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -703,6 +703,8 @@
       "__id__": 0
     },
     "fileId": "f2DpVkyFpO/ZL5fgQIOAy4",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -1217,7 +1219,6 @@
     "__prefab": {
       "__id__": 54
     },
-    "canvas": null,
     "lineRigibody": {
       "__id__": 43
     },
@@ -1457,6 +1458,8 @@
       "__id__": 0
     },
     "fileId": "8bEUNP3ENPJYD+exiEZj74",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -1501,6 +1504,10 @@
     },
     "circleCollider": {
       "__id__": 15
+    },
+    "partnerCollider": null,
+    "drawControl": {
+      "__id__": 53
     },
     "_id": ""
   },

@@ -1,32 +1,11 @@
 import {
-    _decorator,
-    Camera,
-    CCInteger,
-    Color,
-    Component,
-    ERaycast2DType,
-    ERigidBody2DType,
-    EventTouch,
-    Graphics,
-    Input,
-    input,
-    Node,
-    PhysicsSystem2D,
-    PolygonCollider2D,
-    RigidBody2D,
-    SystemEvent,
-    systemEvent,
-    UITransform,
-    Vec2,
+    _decorator, Component, ERaycast2DType, ERigidBody2DType, EventTouch, Graphics, Input, input, PhysicsSystem2D, PolygonCollider2D, RigidBody2D, UITransform, Vec2,
     Vec3,
 } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("DrawControl")
 export class DrawControl extends Component {
-    @property(UITransform)
-    canvas: UITransform;
-
     @property(RigidBody2D)
     lineRigibody: RigidBody2D = null;
 
@@ -36,8 +15,11 @@ export class DrawControl extends Component {
     @property(RigidBody2D)
     listRigibody: RigidBody2D[] = [];
 
+    canvas: Vec3;
     startPoint: Vec2 = new Vec2(0, 0);
     endPoint: Vec2 = new Vec2(100, 100);
+
+    lastMouseMoveTime: number = 0;
 
     endDraw: boolean = false;
 
@@ -46,28 +28,44 @@ export class DrawControl extends Component {
         input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
         input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+
         // this.drawLine(this.startPoint, this.endPoint);
     }
     init() {
-        // this.line.node.position = new Vec3(-this.canvas.node.position.x, -this.canvas.node.position.y);
+        this.line.node.position = new Vec3(-this.canvas.x, -this.canvas.y);
         this.line.clear();
     }
     onTouchStart(event: EventTouch) {
         this.startPoint = event.getUILocation();
+        this.schedule(this.checkMouseMove, 1);
     }
     onTouchMove(event: EventTouch) {
+        this.lastMouseMoveTime = Date.now();
         this.endPoint = event.getUILocation();
         this.drawLine(this.startPoint, this.endPoint);
     }
     onTouchEnd(event: EventTouch) {
-        // this.obstacle.active = true;
+        this.touchEnd();
+    }
+    touchEnd() {
         this.endDraw = true;
         this.turnDynamicType();
     }
 
+    checkMouseMove() {
+        console.log("the last mouse move time:" + this.lastMouseMoveTime);
+        const currentTime = Date.now();
+        if (currentTime - this.lastMouseMoveTime >= 50) {
+            this.lastMouseMoveTime = currentTime;
+            console.log(currentTime - this.lastMouseMoveTime);
+            console.log("touch end");
+            this.touchEnd();
+        }
+    }
+
     drawLine(start: Vec2, end: Vec2) {
         if (!this.checkCanDraw()) {
-            console.log("Can't draw");
+            //console.log("Can't draw");
             return;
         }
         // console.log(this.startPoint + " " + this.endPoint);
@@ -89,8 +87,6 @@ export class DrawControl extends Component {
         if (this.checkRaycast()) {
             console.log("Have obstacle");
             return false;
-        } else {
-            console.log("Bug");
         }
         // if(Vec2.strictEquals(this.startPoint, this.endPoint)) return false;
 

@@ -1,15 +1,5 @@
-import {
-    _decorator,
-    Collider,
-    Collider2D,
-    Component,
-    Contact2DType,
-    instantiate,
-    IPhysics2DContact,
-    Node,
-    Prefab,
-} from "cc";
-import { CollisionTag, MapControl } from "./MapControl";
+import { _decorator, Component, instantiate, Node, Prefab } from "cc";
+import { MapControl } from "./MapControl";
 import { UIManager } from "./UIManager";
 const { ccclass, property } = _decorator;
 
@@ -21,9 +11,12 @@ export class GameManager extends Component {
     @property(Node)
     levelContain: Node = null;
 
+    @property(Node)
+    gamePlayCanvas: Node = null;
+    
     @property(UIManager)
     uiCanvas: UIManager = null;
-
+    
     map: Node;
     mapControl: MapControl = null;
     levelIndex: number = 0;
@@ -41,6 +34,7 @@ export class GameManager extends Component {
         this.map.active = false;
         this.map.destroy();
         this.levelIndex++;
+        if(this.levelIndex >= this.level.length) this.levelIndex = 0;
         this.instantiateMap(this.levelIndex);
     }
     replay() {
@@ -54,5 +48,6 @@ export class GameManager extends Component {
         this.levelContain.addChild(this.map);
         this.mapControl = this.map.getComponent(MapControl);
         this.mapControl.uiCanvas = this.uiCanvas;
+        this.mapControl.drawControl.canvas = this.gamePlayCanvas.position;
     }
 }
