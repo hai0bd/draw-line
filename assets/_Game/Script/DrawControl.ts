@@ -53,12 +53,9 @@ export class DrawControl extends Component {
     }
 
     checkMouseMove() {
-        console.log("the last mouse move time:" + this.lastMouseMoveTime);
         const currentTime = Date.now();
         if (currentTime - this.lastMouseMoveTime >= 50) {
             this.lastMouseMoveTime = currentTime;
-            console.log(currentTime - this.lastMouseMoveTime);
-            console.log("touch end");
             this.touchEnd();
         }
     }
@@ -81,11 +78,9 @@ export class DrawControl extends Component {
     checkCanDraw(): boolean {
         if (this.endDraw) return false;
         if (!this.line) {
-            console.error("line component is not assigned.");
             return false;
         }
         if (this.checkRaycast()) {
-            console.log("Have obstacle");
             return false;
         }
         // if(Vec2.strictEquals(this.startPoint, this.endPoint)) return false;
@@ -102,7 +97,6 @@ export class DrawControl extends Component {
         results.forEach((result) => {
             const collider = result.collider;
             if (collider.node.layer == this.node.layer) {
-                console.log(collider.node.name);
                 isCollision = true;
             }
             // console.log(`Hit collider on layer: ${collider.node.layer}`);
@@ -143,6 +137,7 @@ export class DrawControl extends Component {
     turnDynamicType() {
         for (let i = 0; i < this.listRigibody.length; i++) {
             this.listRigibody[i].type = ERigidBody2DType.Dynamic;
+            console.log(this.listRigibody[i].node.name + " is falling");
         }
     }
 }

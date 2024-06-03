@@ -801,7 +801,7 @@
       "__id__": 1
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 24
@@ -937,6 +937,9 @@
     },
     "uiCanvas": {
       "__id__": 25
+    },
+    "canvas": {
+      "__id__": 19
     },
     "_id": "349dNPgyNEm5sLp9UtmIi/"
   },
@@ -3785,7 +3788,7 @@
       "__id__": 1
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 98
@@ -3833,43 +3836,7 @@
     "__prefab": null,
     "level": [
       {
-        "__uuid__": "5c471bdc-0e51-4e75-967a-5650d015c52f",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "c77e0001-63e6-48ba-84fe-8c9a43f80eb7",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "6d6fdfd9-77b1-4978-b6cc-a8c7027774b2",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "37df44b0-7bb9-4acb-a561-a2be5238812f",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "421990c3-1c4b-4517-9d25-bc8d02e39eae",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "664b80f0-27a0-4ce4-9568-74874c3804d1",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "3e893666-4a84-4af7-abc1-ec0163a96d52",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "313da28a-f79d-4fe5-8af9-4c5f3ed6afdc",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "ae24bb36-e903-4a81-b993-0b3acc4442b2",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "6f376cd8-558d-497e-a31a-8af3adb2374d",
+        "__uuid__": "35d23216-e163-464a-930e-cf57364d25dd",
         "__expectedType__": "cc.Prefab"
       }
     ],
@@ -3882,6 +3849,7 @@
     "uiCanvas": {
       "__id__": 25
     },
+    "canvas": null,
     "_id": "346L22O/hGNKCRZBRuhalp"
   },
   {

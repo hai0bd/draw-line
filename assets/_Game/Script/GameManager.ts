@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab } from "cc";
+import { _decorator, Component, instantiate, Node, Prefab, UITransform } from "cc";
 import { MapControl } from "./MapControl";
 import { UIManager } from "./UIManager";
 const { ccclass, property } = _decorator;
@@ -13,10 +13,13 @@ export class GameManager extends Component {
 
     @property(Node)
     gamePlayCanvas: Node = null;
-    
+
     @property(UIManager)
     uiCanvas: UIManager = null;
-    
+
+    @property(UITransform)
+    canvas: UITransform = null;
+
     map: Node;
     mapControl: MapControl = null;
     levelIndex: number = 0;
@@ -34,7 +37,7 @@ export class GameManager extends Component {
         this.map.active = false;
         this.map.destroy();
         this.levelIndex++;
-        if(this.levelIndex >= this.level.length) this.levelIndex = 0;
+        if (this.levelIndex >= this.level.length) this.levelIndex = 0;
         this.instantiateMap(this.levelIndex);
     }
     replay() {
@@ -48,6 +51,7 @@ export class GameManager extends Component {
         this.levelContain.addChild(this.map);
         this.mapControl = this.map.getComponent(MapControl);
         this.mapControl.uiCanvas = this.uiCanvas;
+        this.mapControl.mapTransform.contentSize = this.canvas.contentSize;
         this.mapControl.drawControl.canvas = this.gamePlayCanvas.position;
     }
 }
