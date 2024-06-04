@@ -47,6 +47,7 @@ export class GameManager extends Component {
         this.map = instantiate(this.level[this.levelIndex]);
         this.levelContain.addChild(this.map);
         this.mapControl = this.map.getComponent(MapControl);
+        
         this.mapControl.uiCanvas = this.uiCanvas;
         this.mapControl.drawControl.canvas = this.gamePlayCanvas.position;
     }

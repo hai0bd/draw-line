@@ -1,10 +1,13 @@
-import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact } from "cc";
+import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, size, UITransform, view, Widget } from "cc";
 import { UIManager } from "./UIManager";
 import { DrawControl } from "./DrawControl";
 const { ccclass, property } = _decorator;
 
 @ccclass("MapControl")
 export class MapControl extends Component {
+    @property(UITransform)
+    mapTransform: UITransform;
+
     @property(Collider2D)
     circleCollider: Collider2D = null;
 
@@ -16,6 +19,32 @@ export class MapControl extends Component {
 
     uiCanvas: UIManager;
     isWin: boolean = false;
+
+    onLoad() {
+        this.updatecanvas();
+        // bắt sự kiện thay đổi kích thước màn hình
+        view.on("canvas-resize", this.updatecanvas, this);
+    }
+
+    updatecanvas() {
+        const canvas = view.getDesignResolutionSize();
+        let deviceResolution = view.getResolutionPolicy();
+        let designRatio = canvas.width / canvas.height;
+        let deviceRatio =
+            deviceResolution.canvasSize.width /
+            deviceResolution.canvasSize.height;
+        if (deviceRatio < designRatio) {
+            this.node.getComponent(UITransform).contentSize = size(
+                canvas.width,
+                canvas.width / deviceRatio
+            );
+        } else {
+            this.node.getComponent(UITransform).contentSize = size(
+                canvas.height * deviceRatio,
+                canvas.height
+            );
+        }
+    }
 
     start() {
         this.colliderEvent();
