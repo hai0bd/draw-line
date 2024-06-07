@@ -1,19 +1,29 @@
-import { _decorator, CCFloat, Component, Node, RigidBody, RigidBody2D, Vec2 } from 'cc';
+import { _decorator, CCFloat, CCInteger, Component, Node, RigidBody, RigidBody2D, tween, Vec2, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('test')
 export class test extends Component {
-    @property(RigidBody2D)
-    rb: RigidBody2D = null;
+    @property(Node)
+    targetPos: Node;
+
+    @property(CCInteger)
+    durationTime: number = 1;
 
     @property(CCFloat)
     speed: number = 1;
 
-    update(deltaTime: number) {
-        const velocity = this.rb.linearVelocity;
-        if (velocity.x > this.speed) return;
-        velocity.x = this.speed;
-        this.rb.linearVelocity = velocity;
+    start() {
+        this.test()
+    }
+    test() {
+        tween(this.node.position)
+            .to(this.durationTime, this.targetPos.position, {
+                easing: 'bounceInOut',
+                onUpdate: (target: Vec3, ratio: number) => {
+                    this.node.position = target;
+                }
+            })
+            .start();
     }
 }
 
