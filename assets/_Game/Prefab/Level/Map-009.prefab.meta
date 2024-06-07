@@ -1,11 +1,9 @@
 {
   "ver": "1.1.50",
   "importer": "prefab",
-  "imported": true,
+  "imported": false,
   "uuid": "c77e0001-63e6-48ba-84fe-8c9a43f80eb7",
-  "files": [
-    ".json"
-  ],
+  "files": [],
   "subMetas": {},
   "userData": {
     "syncNodeName": "Map-009"
