@@ -25,11 +25,14 @@ export class BouncePopUp extends Component {
     }
     repeatBounce() {
         tween(this.node)
-            .to(this.durationTime / 2, { scale: new Vec3(.95, .95, 1) }, { easing: 'sineIn' })
-            .to(this.durationTime / 2, { scale: new Vec3(1.05, 1.05, 1) }, { easing: 'sineOut' })
+            .to(this.durationTime / 2, { scale: new Vec3(1, 1, 1) }, { easing: this.customEasing })
+            .to(this.durationTime / 2, { scale: new Vec3(1.05, 1.05, 1) }, { easing: this.customEasing })
             .union()
             .repeatForever()
             .start();
+    }
+    customEasing(time) {
+        return Math.sin(time * Math.PI * 2) * 0.5 + 0.5;
     }
 }
 

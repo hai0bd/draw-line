@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, size, UITransform, view, Widget } from "cc";
-=======
-import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, UITransform } from "cc";
->>>>>>> 8e6a03c5cdf15e87b03080da41ae91c8c5a4d0bc
 import { UIManager } from "./UIManager";
 import { DrawControl } from "./DrawControl";
 const { ccclass, property } = _decorator;
