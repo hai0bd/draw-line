@@ -1,14 +1,15 @@
-import { _decorator, Component, game, Label, Node } from "cc";
+import { _decorator, Component, game, Label, Node, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
+import { BouncePopUp } from "./BouncePopUp";
 const { ccclass, property } = _decorator;
 
 @ccclass("UIManager")
 export class UIManager extends Component {
-    @property(Node)
-    winPopUp: Node = null;
+    @property(BouncePopUp)
+    winPopUp: BouncePopUp = null;
 
-    @property(Node)
-    losePopUp: Node = null;
+    @property(BouncePopUp)
+    losePopUp: BouncePopUp = null;
 
     @property(Node)
     multiphyBG: Node = null;
@@ -21,25 +22,38 @@ export class UIManager extends Component {
     victory() {
         const levelIndex = this.gameManager.levelIndex + 1;
         this.levelLabel.string = levelIndex.toString();
-        this.winPopUp.active = true;
+        this.OpenPopUp(this.winPopUp);
         this.multiphyBG.active = true;
     }
 
     lose() {
-        this.losePopUp.active = true;
+        this.OpenPopUp(this.losePopUp);
         this.multiphyBG.active = true;
     }
 
     onReplayButtonClick() {
-        this.losePopUp.active = false;
-        this.winPopUp.active = false;
+        this.ClosePopUp(this.losePopUp);
+        this.ClosePopUp(this.winPopUp);
         this.multiphyBG.active = false;
         this.gameManager.replay();
     }
 
     onNextLevelButtonClick() {
-        this.winPopUp.active = false;
+        this.ClosePopUp(this.winPopUp);
         this.multiphyBG.active = false;
         this.gameManager.nextLevel();
     }
+
+    OpenPopUp(popup: BouncePopUp) {
+        popup.node.active = true;
+        popup.init();
+    }
+
+    ClosePopUp(popup: BouncePopUp) {
+        if (popup.repeatTween) {
+            popup.node.active = false;
+            popup.stopRepeatBoune();
+        }
+    }
 }
+

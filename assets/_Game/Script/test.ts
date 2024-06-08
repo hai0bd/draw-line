@@ -1,30 +1,20 @@
-import { _decorator, CCFloat, CCInteger, Component, Node, RigidBody, RigidBody2D, tween, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, Node, Graphics, Vec2, Size, Color } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('test')
-export class test extends Component {
-    @property(Node)
-    targetPos: Node;
+@ccclass('Graph')
+export class Graph extends Component {
+    @property(Graphics)
+    graphContainer: Graphics = null!;
 
-    @property(CCInteger)
-    durationTime: number = 1;
+    @property
+    numPoints: number = 10;
 
-    @property(CCFloat)
-    speed: number = 1;
+    @property
+    amplitude: number = 100;
+
+    @property
+    frequency: number = 0.1;
 
     start() {
-        this.test()
-    }
-    test() {
-        tween(this.node.position)
-            .to(this.durationTime, this.targetPos.position, {
-                easing: 'bounceInOut',
-                onUpdate: (target: Vec3, ratio: number) => {
-                    this.node.position = target;
-                }
-            })
-            .start();
     }
 }
-
-
