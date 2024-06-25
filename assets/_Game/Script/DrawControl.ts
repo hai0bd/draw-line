@@ -31,6 +31,16 @@ export class DrawControl extends Component {
 
         // this.drawLine(this.startPoint, this.endPoint);
     }
+
+    OnDisable() {
+        this.offEvent();
+    }
+    offEvent() {
+        input.off(Input.EventType.TOUCH_START, this.onTouchStart, this);
+        input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        input.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+    }
+
     init() {
         this.line.node.position = new Vec3(-this.canvas.x, -this.canvas.y);
         this.line.clear();
@@ -50,6 +60,7 @@ export class DrawControl extends Component {
     touchEnd() {
         this.endDraw = true;
         this.turnDynamicType();
+        this.offEvent();
     }
 
     checkMouseMove() {
@@ -112,7 +123,7 @@ export class DrawControl extends Component {
         ).normalize();
         vec.rotate(Math.PI / 2);
 
-        const offset = 2.5;
+        const offset = 3;
 
         const listPoint = [
             new Vec2(
@@ -137,7 +148,8 @@ export class DrawControl extends Component {
     turnDynamicType() {
         for (let i = 0; i < this.listRigibody.length; i++) {
             this.listRigibody[i].type = ERigidBody2DType.Dynamic;
-            console.log(this.listRigibody[i].node.name + " is falling");
+            console.log(this.listRigibody[i].node.name + ": " + this.listRigibody[i].linearVelocity + " " + this.listRigibody[i].angularVelocity);
+            // console.log(this.listRigibody[i]);
         }
     }
 }
