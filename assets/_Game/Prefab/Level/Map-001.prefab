@@ -43,7 +43,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 72
+        "__id__": 71
       },
       {
         "__id__": 74
@@ -872,8 +872,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -960,
-      "y": -540,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -1023,10 +1023,10 @@
     "_target": {
       "__id__": 1
     },
-    "_left": -960,
+    "_left": 0,
     "_right": 0,
     "_top": 0,
-    "_bottom": -540,
+    "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -1408,7 +1408,7 @@
       }
     ],
     "_prefab": {
-      "__id__": 71
+      "__id__": 73
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -1559,8 +1559,8 @@
     "__prefab": {
       "__id__": 70
     },
-    "lineRigibody": {
-      "__id__": 43
+    "canvasTransform": {
+      "__id__": 71
     },
     "line": {
       "__id__": 41
@@ -1580,19 +1580,6 @@
     "fileId": "8a98HZVcNJj5MgpjJZpGL7"
   },
   {
-    "__type__": "cc.PrefabInfo",
-    "root": {
-      "__id__": 1
-    },
-    "asset": {
-      "__id__": 0
-    },
-    "fileId": "e5tJnwOu9C+p6IbxcUPKaj",
-    "instance": null,
-    "targetOverrides": null,
-    "nestedPrefabInstanceRoots": null
-  },
-  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -1602,7 +1589,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 73
+      "__id__": 72
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -1621,6 +1608,19 @@
     "fileId": "5cxE0KkL1OBr+jF4MbpiZC"
   },
   {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__id__": 0
+    },
+    "fileId": "e5tJnwOu9C+p6IbxcUPKaj",
+    "instance": null,
+    "targetOverrides": null,
+    "nestedPrefabInstanceRoots": null
+  },
+  {
     "__type__": "f1a7axR5Z1NSoeYH9Xo/UYj",
     "_name": "",
     "_objFlags": 0,
@@ -1633,7 +1633,7 @@
       "__id__": 75
     },
     "mapTransform": {
-      "__id__": 72
+      "__id__": 71
     },
     "circleCollider": {
       "__id__": 15

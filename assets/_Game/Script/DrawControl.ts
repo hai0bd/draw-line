@@ -6,8 +6,8 @@ const { ccclass, property } = _decorator;
 
 @ccclass("DrawControl")
 export class DrawControl extends Component {
-    @property(RigidBody2D)
-    lineRigibody: RigidBody2D = null;
+    @property(UITransform)
+    canvasTransform: UITransform;
 
     @property(Graphics)
     line: Graphics = null;
@@ -42,16 +42,17 @@ export class DrawControl extends Component {
     }
 
     init() {
-        this.line.node.position = new Vec3(-this.canvas.x, -this.canvas.y);
+        // this.line.node.position = new Vec3(-this.canvas.x, -this.canvas.y);
         this.line.clear();
     }
     onTouchStart(event: EventTouch) {
-        this.startPoint = event.getUILocation();
+        let touch = event.touch;
+        this.startPoint = this.convertLocation(event);
         this.schedule(this.checkMouseMove, 1);
     }
     onTouchMove(event: EventTouch) {
         this.lastMouseMoveTime = Date.now();
-        this.endPoint = event.getUILocation();
+        this.endPoint = this.convertLocation(event);
         this.drawLine(this.startPoint, this.endPoint);
     }
     onTouchEnd(event: EventTouch) {
@@ -61,6 +62,12 @@ export class DrawControl extends Component {
         this.endDraw = true;
         this.turnDynamicType();
         this.offEvent();
+    }
+
+    convertLocation(event: EventTouch) {
+        let touchPos = new Vec3(event.getUILocation().x, event.getUILocation().y);
+        let pos = this.canvasTransform.convertToNodeSpaceAR(touchPos);
+        return new Vec2(pos.x, pos.y);
     }
 
     checkMouseMove() {
@@ -91,9 +98,9 @@ export class DrawControl extends Component {
         if (!this.line) {
             return false;
         }
-        if (this.checkRaycast()) {
+        /* if (this.checkRaycast()) {
             return false;
-        }
+        } */
         // if(Vec2.strictEquals(this.startPoint, this.endPoint)) return false;
 
         return true;
