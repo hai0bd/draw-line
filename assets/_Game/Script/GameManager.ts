@@ -11,9 +11,6 @@ export class GameManager extends Component {
     @property(Node)
     levelContain: Node = null;
 
-    @property(Node)
-    gamePlayCanvas: Node = null;
-
     @property(UIManager)
     uiCanvas: UIManager = null;
 
@@ -53,6 +50,6 @@ export class GameManager extends Component {
 
         this.mapControl.uiCanvas = this.uiCanvas;
         this.mapControl.mapTransform.contentSize = this.canvas.contentSize;
-        this.mapControl.drawControl.canvas = this.gamePlayCanvas.position;
+        this.mapControl.drawControl.canvasTransform = this.canvas;
     }
 }

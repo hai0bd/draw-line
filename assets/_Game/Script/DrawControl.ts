@@ -1,35 +1,50 @@
 import {
-    _decorator, Component, ERaycast2DType, ERigidBody2DType, EventTouch, Graphics, Input, input, PhysicsSystem2D, PolygonCollider2D, RigidBody2D, UITransform, Vec2,
+    _decorator, Component, EPhysics2DDrawFlags, ERaycast2DType, ERigidBody2DType, EventTouch, Graphics, Input, input, NodeEventType, PhysicsSystem2D, PolygonCollider2D, RigidBody2D, UITransform, Vec2,
     Vec3,
 } from "cc";
+import { ConditionDraw } from "./ConditionDraw";
 const { ccclass, property } = _decorator;
 
 @ccclass("DrawControl")
 export class DrawControl extends Component {
-    @property(UITransform)
-    canvasTransform: UITransform;
-
-    @property(Graphics)
-    line: Graphics = null;
-
     @property(RigidBody2D)
     listRigibody: RigidBody2D[] = [];
 
-    canvas: Vec3;
-    startPoint: Vec2 = new Vec2(0, 0);
-    endPoint: Vec2 = new Vec2(100, 100);
+    canvasTransform: UITransform;
 
     lastMouseMoveTime: number = 0;
+    isCollision: boolean = false;
 
-    endDraw: boolean = false;
+    private condition: ConditionDraw;
+    private transform: UITransform;
+    private graphic: Graphics;
+    private rigidBody: RigidBody2D;
+    private lastPos: Vec2;
 
     start() {
-        this.init();
-        input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
-        input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
-        input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+        PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.Aabb |
+            EPhysics2DDrawFlags.Pair |
+            EPhysics2DDrawFlags.CenterOfMass |
+            EPhysics2DDrawFlags.Joint |
+            EPhysics2DDrawFlags.Shape
 
-        // this.drawLine(this.startPoint, this.endPoint);
+        PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.None
+
+        this.condition = new ConditionDraw()
+
+        this.graphic = this.node.getComponent(Graphics);
+        this.rigidBody = this.node.addComponent(RigidBody2D)
+
+        this.rigidBody.type = ERigidBody2DType.Static
+
+        this.transform = this.canvasTransform;
+
+        this.node.getComponent(UITransform).width = this.transform.width;
+        this.node.getComponent(UITransform).height = this.transform.height;
+
+        input.on(Input.EventType.TOUCH_START, this.onTouchStart, this)
+        input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this)
     }
 
     OnDisable() {
@@ -40,26 +55,53 @@ export class DrawControl extends Component {
         input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
         input.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
     }
-
-    init() {
-        // this.line.node.position = new Vec3(-this.canvas.x, -this.canvas.y);
-        this.line.clear();
-    }
     onTouchStart(event: EventTouch) {
-        let touch = event.touch;
-        this.startPoint = this.convertLocation(event);
+        this.isCollision = this.condition.checkPoint(new Vec2(event.getUILocation().x, event.getUILocation().y))
+
+        if (this.isCollision) return
+
+        this.rigidBody.destroy()
+        this.rigidBody = this.node.addComponent(RigidBody2D)
+        this.rigidBody.type = ERigidBody2DType.Static
+
+        this.lastPos = event.getUILocation();
+        /* this.isCollison = this.condition.checkPoint(new Vec2(event.getUILocation().x, event.getUILocation().y));
+        if (this.isCollison) return;
+
+        this.startPoint = event.getUILocation();*/
         this.schedule(this.checkMouseMove, 1);
     }
     onTouchMove(event: EventTouch) {
+        if (this.isCollision) return;
+
         this.lastMouseMoveTime = Date.now();
-        this.endPoint = this.convertLocation(event);
-        this.drawLine(this.startPoint, this.endPoint);
+
+        const startPoint = new Vec2(this.lastPos.x, this.lastPos.y);
+        const endPoint = new Vec2(event.getUILocation().x, event.getUILocation().y);
+
+        const isCollider = this.condition.checkRaycast(endPoint, startPoint);
+        if (isCollider) return;
+        if (this.condition.checkPoint(endPoint)) return;
+        if (startPoint.x == endPoint.x && startPoint.y == endPoint.y) return;
+
+        this.drawLine(startPoint, endPoint);
+
+        /* if (this.isCollison) return;
+
+        this.endPoint = event.getUILocation();
+        
+
+        if (!this.checkCanDraw()) return;
+        this.drawLine(this.startPoint, this.endPoint); */
     }
     onTouchEnd(event: EventTouch) {
+        if (this.isCollision) return
+
         this.touchEnd();
     }
     touchEnd() {
-        this.endDraw = true;
+        this.rigidBody.type = ERigidBody2DType.Dynamic;
+        this.rigidBody.wakeUp();
         this.turnDynamicType();
         this.offEvent();
     }
@@ -78,78 +120,54 @@ export class DrawControl extends Component {
         }
     }
 
-    drawLine(start: Vec2, end: Vec2) {
-        if (!this.checkCanDraw()) {
-            //console.log("Can't draw");
-            return;
-        }
-        // console.log(this.startPoint + " " + this.endPoint);
-        // this.line.clear(); // Clear any previous drawings
+    drawLine(startPoint: Vec2, endPoint: Vec2) {
 
-        this.line.moveTo(start.x, start.y); // Move to start point
-        this.line.lineTo(end.x, end.y); // Draw line to end point
-        this.line.stroke(); // Apply the stroke to draw the line
+        const { width, height } = this.transform;
 
-        this.createPolygon(this.startPoint, this.endPoint);
-        this.startPoint = this.endPoint;
+        this.graphic.moveTo(startPoint.x - width / 2, startPoint.y - height / 2);
+        this.graphic.lineTo(endPoint.x - width / 2, endPoint.y - height / 2);
+        this.graphic.stroke();
+
+        this.createPolygon(startPoint, endPoint, width, height);
+
+        this.lastPos = endPoint;
+        /* const { width, height } = this.lineTransform;
+
+        this.lineGraphics.moveTo(start.x - width / 2, start.y - height / 2); // Move to start point
+        this.lineGraphics.lineTo(end.x - width / 2, end.y - height / 2); // Draw line to end point
+        this.lineGraphics.stroke(); // Apply the stroke to draw the line
+
+        this.createPolygon(this.startPoint, this.endPoint, width, height);
+        this.startPoint = this.endPoint; */
     }
     checkCanDraw(): boolean {
-        if (this.endDraw) return false;
-        if (!this.line) {
+        /* if (this.endDraw) return false;
+        if (!this.lineGraphics) {
             return false;
         }
-        /* if (this.checkRaycast()) {
-            return false;
-        } */
-        // if(Vec2.strictEquals(this.startPoint, this.endPoint)) return false;
+
+        if (this.condition.checkRaycast(this.startPoint, this.endPoint)) return false;
+        if (this.condition.checkPoint(this.endPoint)) return false; */
 
         return true;
     }
-    checkRaycast(): boolean {
-        let isCollision = false;
-        const results = PhysicsSystem2D.instance.raycast(
-            this.startPoint,
-            this.endPoint,
-            ERaycast2DType.All
-        );
-        results.forEach((result) => {
-            const collider = result.collider;
-            if (collider.node.layer == this.node.layer) {
-                isCollision = true;
-            }
-            // console.log(`Hit collider on layer: ${collider.node.layer}`);
-        });
-        if (isCollision) return true;
-        return false;
-    }
 
-    private createPolygon(startPoint: Vec2, endPoint: Vec2): void {
-        const vec = new Vec2(
-            endPoint.x - startPoint.x,
-            endPoint.y - startPoint.y
-        ).normalize();
-        vec.rotate(Math.PI / 2);
+    private createPolygon(startPoint: Vec2, endPoint: Vec2, width: number, height: number): void {
+        const vec = new Vec2(endPoint.x - startPoint.x, endPoint.y - startPoint.y).normalize()
+        vec.rotate(Math.PI / 2)
 
-        const offset = 3;
+        const offset = 2.5
 
-        const listPoint = [
-            new Vec2(
-                startPoint.x - vec.x * offset,
-                startPoint.y - vec.y * offset
-            ),
-            new Vec2(endPoint.x - vec.x * offset, endPoint.y - vec.y * offset),
-            new Vec2(endPoint.x + vec.x * offset, endPoint.y + vec.y * offset),
-            new Vec2(
-                startPoint.x + vec.x * offset,
-                startPoint.y + vec.y * offset
-            ),
-        ];
+        const listPoint = [new Vec2(startPoint.x - width / 2 - vec.x * offset, startPoint.y - height / 2 - vec.y * offset),
+        new Vec2(endPoint.x - width / 2 - vec.x * offset, endPoint.y - height / 2 - vec.y * offset),
+        new Vec2(endPoint.x - width / 2 + vec.x * offset, endPoint.y - height / 2 + vec.y * offset),
+        new Vec2(startPoint.x - width / 2 + vec.x * offset, startPoint.y - height / 2 + vec.y * offset)]
 
-        const collider = this.line.node.addComponent(PolygonCollider2D);
-        collider.group = 2;
-        collider.points = listPoint;
+        const collider = this.node.addComponent(PolygonCollider2D)
+        // collider.group = 0
+        collider.points = listPoint
         collider.density = 100;
-        collider.apply();
+        collider.apply()
     }
 
     turnDynamicType() {
