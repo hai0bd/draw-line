@@ -28,8 +28,8 @@ export class BouncePopUp extends Component {
     }
     repeatBounce() {
         this.repeatTween = tween(this.node)
-            .to(this.durationTime * 1.5, { scale: new Vec3(.95, .95, 1) }, { easing: this.customEasing })
-            .to(this.durationTime * 1.5, { scale: new Vec3(1, 1, 1) }, { easing: this.customEasing })
+            .to(this.durationTime * 1.5, { scale: new Vec3(1.02, 1.02, 1.02) }, { easing: 'backOut' })
+            .to(this.durationTime * 1.5, { scale: new Vec3(0.98, 0.98, 0.98) }, { easing: 'backIn' })
             .union()
             .repeatForever()
             .start();

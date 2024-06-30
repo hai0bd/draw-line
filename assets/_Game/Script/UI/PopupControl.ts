@@ -1,10 +1,10 @@
-import { _decorator, Component, game, Label, Node, Vec3 } from "cc";
-import { GameManager } from "./GameManager";
-import { BouncePopUp } from "./BouncePopUp";
+import { _decorator, Component, Node, Label } from 'cc';
+import { BouncePopUp } from './BouncePopUp';
+import { GameManager } from '../Manager/GameManager';
 const { ccclass, property } = _decorator;
 
-@ccclass("UIManager")
-export class UIManager extends Component {
+@ccclass('PopupControl')
+export class PopupControl extends Component {
     @property(BouncePopUp)
     winPopUp: BouncePopUp = null;
 
@@ -17,10 +17,8 @@ export class UIManager extends Component {
     @property(Label)
     levelLabel: Label = null;
 
-    gameManager: GameManager = null;
-
     victory() {
-        const levelIndex = this.gameManager.levelIndex + 1;
+        const levelIndex = GameManager.instance.levelIndex + 1;
         this.levelLabel.string = levelIndex.toString();
         this.OpenPopUp(this.winPopUp);
         this.multiphyBG.active = true;
@@ -35,13 +33,13 @@ export class UIManager extends Component {
         this.ClosePopUp(this.losePopUp);
         this.ClosePopUp(this.winPopUp);
         this.multiphyBG.active = false;
-        this.gameManager.replay();
+        GameManager.instance.replay();
     }
 
     onNextLevelButtonClick() {
         this.ClosePopUp(this.winPopUp);
         this.multiphyBG.active = false;
-        this.gameManager.nextLevel();
+        GameManager.instance.nextLevel();
     }
 
     OpenPopUp(popup: BouncePopUp) {
@@ -56,4 +54,5 @@ export class UIManager extends Component {
         }
     }
 }
+
 

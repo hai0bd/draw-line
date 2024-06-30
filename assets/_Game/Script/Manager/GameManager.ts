@@ -1,10 +1,12 @@
 import { _decorator, Component, instantiate, Node, Prefab, UITransform } from "cc";
-import { MapControl } from "./MapControl";
+import { MapControl } from "../MapControl";
 import { UIManager } from "./UIManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")
 export class GameManager extends Component {
+    private static _instance: GameManager;
+
     @property(Prefab)
     level: Prefab[] = [];
 
@@ -21,10 +23,24 @@ export class GameManager extends Component {
     mapControl: MapControl = null;
     levelIndex: number = 0;
 
-    start() {
-        this.instantiateMap(this.levelIndex);
-        this.uiCanvas.gameManager = this;
+    public static get instance(): GameManager {
+        if (!this._instance) {
+            this._instance = new GameManager;
+        }
+        return this._instance;
     }
+
+    onLoad() {
+        if (!GameManager._instance) {
+            GameManager._instance = this;
+        } else {
+            this.destroy();
+        }
+    }
+
+    /* start() {
+        this.instantiateMap(this.levelIndex);
+    } */
 
     victory() {
         this.uiCanvas.victory();
@@ -44,6 +60,8 @@ export class GameManager extends Component {
     }
 
     instantiateMap(index: number) {
+        this.levelIndex = index;
+
         this.map = instantiate(this.level[this.levelIndex]);
         this.levelContain.addChild(this.map);
         this.mapControl = this.map.getComponent(MapControl);
