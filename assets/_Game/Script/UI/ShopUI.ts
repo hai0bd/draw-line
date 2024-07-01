@@ -40,9 +40,6 @@ export class ShopUI extends Component {
         this.skipTab.active = true;
         this.gemTab.active = false;
     }
-    onEsc(){
-        UIManager.instance.backToHomeMenu(this.node);
-    }
 }
 
 

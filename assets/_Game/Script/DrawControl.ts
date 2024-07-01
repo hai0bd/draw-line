@@ -69,12 +69,11 @@ export class DrawControl extends Component {
         if (this.isCollison) return;
 
         this.startPoint = event.getUILocation();*/
-        this.schedule(this.checkMouseMove, 1);
+        // this.schedule(this.checkMouseMove, 1);
     }
     onTouchMove(event: EventTouch) {
         if (this.isCollision) return;
 
-        this.lastMouseMoveTime = Date.now();
 
         const startPoint = new Vec2(this.lastPos.x, this.lastPos.y);
         const endPoint = new Vec2(event.getUILocation().x, event.getUILocation().y);
@@ -87,10 +86,10 @@ export class DrawControl extends Component {
         this.drawLine(startPoint, endPoint);
 
         /* if (this.isCollison) return;
-
+        
         this.endPoint = event.getUILocation();
         
-
+        
         if (!this.checkCanDraw()) return;
         this.drawLine(this.startPoint, this.endPoint); */
     }
@@ -121,6 +120,8 @@ export class DrawControl extends Component {
     }
 
     drawLine(startPoint: Vec2, endPoint: Vec2) {
+        this.schedule(this.checkMouseMove, 1);
+        this.lastMouseMoveTime = Date.now();
 
         const { width, height } = this.transform;
 

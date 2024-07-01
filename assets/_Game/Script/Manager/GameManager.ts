@@ -1,6 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab, UITransform } from "cc";
 import { MapControl } from "../MapControl";
 import { UIManager } from "./UIManager";
+import { DataManager } from "./DataManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")
@@ -38,10 +39,6 @@ export class GameManager extends Component {
         }
     }
 
-    /* start() {
-        this.instantiateMap(this.levelIndex);
-    } */
-
     victory() {
         this.uiCanvas.victory();
     }
@@ -52,6 +49,8 @@ export class GameManager extends Component {
         this.levelIndex++;
         if (this.levelIndex >= this.level.length) this.levelIndex = 0;
         this.instantiateMap(this.levelIndex);
+        DataManager.instance.addLevel();
+        DataManager.instance.saveData();
     }
     replay() {
         this.map.active = false;

@@ -40,10 +40,6 @@ export class InventoryUI extends Component {
         this.boxTab.active = true;
         this.ballTab.active = false;
     }
-
-    onEsc() {
-        UIManager.instance.backToHomeMenu(this.node);
-    }
 }
 
 

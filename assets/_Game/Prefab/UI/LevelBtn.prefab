@@ -322,12 +322,12 @@
       }
     ],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 1,
     "_normalColor": {
       "__type__": "cc.Color",
-      "r": 214,
-      "g": 214,
-      "b": 214,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_hoverColor": {
@@ -339,9 +339,9 @@
     },
     "_pressedColor": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 204,
+      "g": 200,
+      "b": 200,
       "a": 255
     },
     "_disabledColor": {
@@ -400,11 +400,13 @@
     "__prefab": {
       "__id__": 16
     },
-    "status": null,
+    "status": {
+      "__id__": 10
+    },
     "levelIndex": {
       "__id__": 5
     },
-    "canPlay": true,
+    "canPlay": false,
     "_id": ""
   },
   {
@@ -420,6 +422,7 @@
       "__id__": 0
     },
     "fileId": "41jnNozjFOopgWcK5K+cko",
+    "instance": null,
     "targetOverrides": null
   }
 ]
